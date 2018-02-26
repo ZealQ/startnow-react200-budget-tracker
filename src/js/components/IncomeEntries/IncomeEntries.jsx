@@ -3,7 +3,11 @@ import React from 'react';
 import {
   updateIncomeDescription,
   updateIncomeAmount,
-  addIncome
+  addIncome,
+  deleteIncome,
+  editIncome,
+  Save,
+  editC
 } from './incomeActions';
 
 export default class IncomeEntries extends React.Component {
@@ -13,7 +17,10 @@ export default class IncomeEntries extends React.Component {
     this.handleDescriptionInput = this.handleDescriptionInput.bind(this);
     this.handleAmountInput = this.handleAmountInput.bind(this);
     this.handleAddIncome = this.handleAddIncome.bind(this);
-    // this.handleDeleteIncome = this.handleDeleteIncome.bind(this);
+    this.handleDeleteIncome = this.handleDeleteIncome.bind(this);
+    this.handleEditIncome = this.handleEditIncome.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleEditC = this.handleEditC.bind(this);
   }
 
   handleDescriptionInput(event) {
@@ -33,14 +40,33 @@ export default class IncomeEntries extends React.Component {
     dispatch(addIncome(description, amount));
   }
 
-// handleDeleteIncome(e){
-//   const {dispatch} = this.props;
-//   const {value} = e.target
-//   dispatch(this.handleDeleteIncome(description,amount));
-// }
+  handleDeleteIncome(e) {
+    const { dispatch } = this.props;
+    const index = e.target.dataset.index;
+    dispatch(deleteIncome(index));
+  }
+
+  handleEditIncome(e) {
+    var { dispatch } = this.props;
+    var index = e.target.dataset.index;
+    dispatch(Save(index));
+  }
+
+  handleEditC(e) {
+    var { dispatch } = this.props;
+    var { id, value } = e.target;
+    var index = e.target.dataset.index;
+    dispatch(editC(index, id, value));
+  }
+
+  handleSave(e) {
+    const { dispatch } = this.props;
+    const index = e.target.dataset.index;
+    dispatch(Save(index));
+}
 
   render() {
-    
+
     const { description, amount, lineItems } = this.props;
     return (
       <div className='card border-danger mb-3'>
@@ -53,7 +79,7 @@ export default class IncomeEntries extends React.Component {
                 type='text'
                 className='form-control'
                 id='income-description'
-                onChange={ this.handleDescriptionInput }
+                onChange={this.handleDescriptionInput}
               />
             </div>
             <div className='form-group'>
@@ -64,41 +90,71 @@ export default class IncomeEntries extends React.Component {
                   type='text'
                   className='form-control'
                   id='income-amount'
-                  onChange={ this.handleAmountInput }
+                  onChange={this.handleAmountInput}
                 />
               </div>
             </div>
             <button
               type='button'
               className='btn btn-danger col-12 mb-5'
-              onClick={ this.handleAddIncome }
+              onClick={this.handleAddIncome}
             >+ Add Income
             </button>
             <table className='table table-sm table-hover'>
               <thead>
                 <tr>
                   <th>Description</th>
-                  <th style={ { width: 120 } } >Amount</th>
+                  <th style={{ width: 120 }} >Amount</th>
                 </tr>
               </thead>
               <tbody>
-              {console.log()}
-                {
 
-                  lineItems.map((lineItem, index) => (
-                    
+                {lineItems.map((lineItem, index) => (
+                  !lineItem.editable ?
                     <tr key={index}>
-                      <td>{ lineItem.description }</td>
-                      <td>${ lineItem.amount.toFixed(2) }</td>
-                    </tr>
-                  ))
-                }
-               
+                      <td>{lineItem.description}</td>
+                      <td>${lineItem.amount.toFixed(2)}</td>
+                      <td><div id="flex">
+                        <button type="button" data-index={index} onClick={this.handleEditIncome}>Edit</button>
+                        <button type="button" data-index={index} onClick={this.handleDeleteIncome}>Delete</button>
+                      </div></td>
+                      </tr>:
+                      <tr  key = {index} >
+                    <td>
+                          <div className="form-group">
+                            <label htmlFor="income-description">Description</label>
+                            <input
+                              data-index={index}
+                              type="text"
+                              className="form-control"
+                              id={'description'}
+                              defaultValue={lineItem.description}
+                              onChange={this.handleEditC}
+                            />
+                          </div>
+                          <div className="form-group">
+                            <label htmlFor="income-amount">Amount</label>
+                            <div className="input-group">
+                              <span className="input-group-addon">$</span>
+                              <input
+                                data-index={index}
+                                type="text"
+                                className="form-control"
+                                id={'amount'}
+                                defaultValue={`$${lineItem.amount.toFixed(2)}`}
+                                onChange={this.handleEditC}
+                              />
+                            </div>
+                          </div>
+                        </td>
+                        <td id="td-save"><button type="button" id="btn-save" data-index={index} onClick={this.handleSave}>Save</button></td>
+                      </tr>
+                      ))}
               </tbody>
             </table>
           </form>
         </div>
       </div>
-    );
+    )
   }
 }

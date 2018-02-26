@@ -35,6 +35,7 @@ export default function ExpenseReducer(state = defaultState, action) {
 
     case "DELETE_EXPENSE":{
     const {index} = action.payload;
+    console.log(index)
     const lineItems = [...state.lineItems];
     lineItems.splice(index,1);
     return{
@@ -59,4 +60,3 @@ export default function ExpenseReducer(state = defaultState, action) {
     }
   }
 }
-return state;

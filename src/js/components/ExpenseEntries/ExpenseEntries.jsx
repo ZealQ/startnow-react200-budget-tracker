@@ -40,6 +40,13 @@ export default class ExpenseEntries extends React.Component {
   handleDeleteExpense(e){
     const {dispatch} = this.props;
     const index = e.target.parentNode.dataset.index;
+    console.log("GG", index)
+    dispatch(deleteExpense(index));
+  }
+
+  handleEditExpense(e){
+    const {dispatch} = this.props;
+    const index = e.target.parentNode.dataset.index;
     dispatch(editExpense(index));
   }
 
@@ -88,7 +95,7 @@ export default class ExpenseEntries extends React.Component {
               <tbody>
                 {
                   lineItems.map((lineItem, index) => (
-                    <tr onClick={this.handleEditExpense}data-index={index} key={index}>
+                    <tr onClick ={this.handleDeleteExpense} data-index={index} key={index}>
                       <td >{ lineItem.description }</td>
                       <td>${ lineItem.amount.toFixed(2) }</td>
                     </tr>
@@ -102,3 +109,4 @@ export default class ExpenseEntries extends React.Component {
     );
   }
 }
+

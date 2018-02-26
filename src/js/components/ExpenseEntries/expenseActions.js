@@ -20,13 +20,13 @@ export function addExpense(description, amount) {
       amount: parseFloat(amount)
     }
   };
-
-  export function deleteExpense(index){
-    return{
-      type:"DELETE_EXPENSE",
-      payload:{index}
-    }
+}
+export function deleteExpense(index) {
+  return {
+    type: "DELETE_EXPENSE",
+    payload: {index}
   }
+};
 
   export function editExpense(index){
     return{
@@ -34,4 +34,3 @@ export function addExpense(description, amount) {
       payload:{index}
     }
   }
-}
